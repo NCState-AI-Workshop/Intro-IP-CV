@@ -55,9 +55,9 @@ def _(mo):
     appending a $1$:
 
     $$
-    x = \begin{bmatrix} x \\ y \end{bmatrix}
+    p = \begin{bmatrix} x \\ y \end{bmatrix}
     \quad\longrightarrow\quad
-    \tilde{x} = \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}
+    \tilde{p} = \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}
     $$
 
     More generally, *any* triple $(x, y, w)$ with $w \neq 0$ represents the
@@ -71,7 +71,6 @@ def _(mo):
 def _(np):
     pt_2d = np.array([3.0, 5.0])
     pt_h = np.array([pt_2d[0], pt_2d[1], 1.0])   # append a 1
-    pt_h
     return (pt_h,)
 
 
@@ -102,10 +101,10 @@ def _(mo):
 
     Collecting the coefficients into a 3-vector $l = (a, b, c)$ gives the
     line's homogeneous coordinates. A homogeneous point
-    $\tilde{x} = (x, y, 1)$ lies **on** the line exactly when
+    $\tilde{p} = (x, y, 1)$ lies **on** the line exactly when
 
     $$
-    l \cdot \tilde{x} = 0
+    l \cdot \tilde{p} = 0
     $$
 
     Points and lines are both just 3-vectors, and "on the line" is a single
@@ -113,8 +112,8 @@ def _(mo):
     scale: $l$ and $k l$ describe the same line for any $k \neq 0$.
 
     A convenient consequence: the line through two homogeneous points
-    $\tilde{x}_1$ and $\tilde{x}_2$ is their **cross product**,
-    $l = \tilde{x}_1 \times \tilde{x}_2$ (and, dually, the intersection point
+    $\tilde{p}_1$ and $\tilde{p}_2$ is their **cross product**,
+    $l = \tilde{p}_1 \times \tilde{p}_2$ (and, dually, the intersection point
     of two lines is the cross product of the lines). Let's check that the
     line built this way really does pass through both points:
     """)
@@ -127,12 +126,29 @@ def _(mo, np):
     _pt2_h = np.array([4.0, 3.0, 1.0])
     _line_l = np.cross(_pt1_h, _pt2_h)
     mo.md(f"""
-    `l = pt1 × pt2 = {_line_l}`, so the line is
+    `pt1_h = {_pt1_h} and pt2_h = {_pt2_h}`
+
+    `l = pt1_h × pt2_h = {_line_l}`, so the line is
     `{_line_l[0]:.1f}x + {_line_l[1]:.1f}y + {_line_l[2]:.1f} = 0`.
 
-    Checking `l · pt1 = {_line_l @ _pt1_h:.1f}` and
-    `l · pt2 = {_line_l @ _pt2_h:.1f}` — both zero, as expected, so the line
+    Checking `l · pt1_h = {_line_l @ _pt1_h:.1f}` and
+    `l · pt2_h = {_line_l @ _pt2_h:.1f}` — both zero, as expected, so the line
     passes through both points.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    **Why oes this work?**
+
+    We can derive the expressions for $l$ in terms of the cross product of $\tilde{p}_1$ and $\tilde{p}_2$ and verify the properties. However, we can make a simpler argument based on the degrees of freedom for $l$. Note that $l \in \mathbb{R}^3$. Hence, we need three equations to provide a solution for $l. Since scaling does not change the equation of the line, we can aim for to solve for the case when the magnitude of $l$ is 1, which provides an equation, i.e.,
+    $$l_1^2 + l_2^2 + l_3^2=1.$$
+    We need two more equations which come from having $p_1$ and $p_2$ in the line. The equations are
+    $$l\cdot\tilde{p}_1=0 \quad \textrm{ and } \quad l\cdot \tilde{p}_2 = 0.$$
+
+    So, we are looking for the solution to these three equations. Clearly, having $l = \tilde{p}_1 \times \tilde{p}_2$ satisfies the first two equations. You may recall that the cross product of two vectors is orthogonal to the original vectors (i.e, $(\tilde{p}_1 \times \tilde{p}_2)\cdot \tilde{p}_1=0$ and $(\tilde{p}_1 \times \tilde{p}_2)\cdot \tilde{p}_2=0$). The condition for unit magnitude is easy to satisfy by normalization, i.e., dividing by the magnitude of the cross-product.
     """)
     return
 
