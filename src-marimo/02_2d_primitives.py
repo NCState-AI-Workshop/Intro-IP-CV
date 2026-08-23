@@ -141,7 +141,7 @@ def _(mo, np):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    **Why oes this work?**
+    **Why does this work?**
 
     We can derive the expressions for $l$ in terms of the cross product of $\tilde{p}_1$ and $\tilde{p}_2$ and verify the properties. However, we can make a simpler argument based on the degrees of freedom for $l$. Note that $l \in \mathbb{R}^3$. Hence, we need three equations to provide a solution for $l. Since scaling does not change the equation of the line, we can aim for to solve for the case when the magnitude of $l$ is 1, which provides an equation, i.e.,
     $$l_1^2 + l_2^2 + l_3^2=1.$$

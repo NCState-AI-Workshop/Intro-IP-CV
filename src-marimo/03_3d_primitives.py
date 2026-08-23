@@ -705,8 +705,10 @@ def _(mo):
       depth through a single center of projection (converging lines of
       sight, giving foreshortening — objects farther away look smaller).
 
-    Next up: putting all of this to work on actual images — pixels,
-    intensity, and how images are represented as arrays of numbers.
+    Next up: the projection model gets a lot more useful once the camera
+    can sit anywhere in the world and pixels have real units — camera
+    **intrinsics** (focal length, principal point, skew), **extrinsics**
+    ($R, t$), and the full camera matrix $P = K[R \mid t]$.
     """)
     return
 
