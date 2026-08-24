@@ -153,7 +153,7 @@ def _(mo):
 def _(mo):
     fx_slider = mo.ui.slider(start=100, stop=500, value=300, step=20, label="fx")
     fy_slider = mo.ui.slider(start=100, stop=500, value=300, step=20, label="fy")
-    skew_slider = mo.ui.slider(start=-0.6, stop=0.6, value=0.0, step=0.05, label="skew s")
+    skew_slider = mo.ui.slider(start=-200, stop=200, value=0.0, step=20, label="skew s")
     cx_slider = mo.ui.slider(start=-150, stop=150, value=0, step=10, label="cx")
     cy_slider = mo.ui.slider(start=-150, stop=150, value=0, step=10, label="cy")
     mo.hstack([fx_slider, fy_slider, skew_slider, cx_slider, cy_slider], justify="start", gap=2)
@@ -213,7 +213,7 @@ def _(mo):
     mo.md(r"""
     ### Investigate
 
-    - Set $f_x \neq f_y$ (e.g. $f_x=500,\ f_y=150$) with skew and principal
+    - Set $f_x \neq f_y$ (e.g. $f_x=500,\ f_y=160$) with skew and principal
       point at 0. What real camera property does this correspond to
       physically? What happens to a circle drawn in normalized coordinates?
     - Can *skew alone* turn the square grid into a parallelogram, without
@@ -348,9 +348,9 @@ def _(mo):
 @app.cell
 def _(mo):
     orbit_dist_slider = mo.ui.slider(start=4, stop=10, value=6, step=0.5, label="orbit distance")
-    orbit_az_slider = mo.ui.slider(start=-180, stop=180, value=35, step=5, label="orbit azimuth")
-    orbit_el_slider = mo.ui.slider(start=-80, stop=80, value=20, step=5, label="orbit elevation")
-    orbit_roll_slider = mo.ui.slider(start=-180, stop=180, value=10, step=5, label="camera roll")
+    orbit_az_slider = mo.ui.slider(start=-180, stop=180, value=0, step=5, label="orbit azimuth")
+    orbit_el_slider = mo.ui.slider(start=-80, stop=80, value=0, step=5, label="orbit elevation")
+    orbit_roll_slider = mo.ui.slider(start=-180, stop=180, value=0, step=5, label="camera roll")
     mo.hstack(
         [orbit_dist_slider, orbit_az_slider, orbit_el_slider, orbit_roll_slider],
         justify="start", gap=2,
@@ -471,7 +471,7 @@ def _(mo):
 
     $$
     P = K\,[R \mid t\,], \qquad
-    \begin{bmatrix} u \\ v \\ w \end{bmatrix} = P \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix},
+    \begin{bmatrix} u \\ v \\ w \end{bmatrix} = P \begin{bmatrix} x \\ y \\ z \\ 1 \end{bmatrix},
     \qquad (u_{\text{px}}, v_{\text{px}}) = \left(\frac{u}{w}, \frac{v}{w}\right)
     $$
 
@@ -644,11 +644,6 @@ def _(mo):
     mo.md(r"""
     ### Investigate
 
-    - Set $c_x, c_y$ back to 0. Now change only the orbit **azimuth** by a
-      small amount (a translation of the camera roughly parallel to the
-      image plane). Does the cube's apparent **size** change this time,
-      even though it didn't for the $c_x$ slider? Why — what's different
-      about how these two parameters enter $P$?
     - With the camera pose fixed, sweep $f_x$ and $f_y$ together. Is a
       change in "how big the cube looks" caused by moving the camera
       (extrinsic) distinguishable from the same change caused by
@@ -680,9 +675,7 @@ def _(mo):
       ambiguity is why real camera calibration uses **multiple views** of
       a known target rather than a single photo.
 
-    Next up: given real photos of a calibration target, how do we work
-    backward and actually *recover* $K$, $R$, and $t$ — and, more
-    fundamentally, what an image *is* as an array of pixel intensities.
+    **Next up:** given our camera geometry, we explain where the discrete color or intensity values come from in an image, and how they relate to lighting, and material and optical properties.
     """)
     return
 
