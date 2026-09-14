@@ -5,3 +5,6 @@ __marimo__/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# Solutions
+__*
