@@ -145,19 +145,21 @@ def _(
     _h = get_kernel_1d(kernel_dropdown_freq.value)
     _omega0 = 2 * np.pi * freq_slider.value
 
-    _n = 200
-    _x = np.arange(_n)
-    _s = np.sin(_omega0 * _x)
-    _o = np.convolve(_s, _h, mode="same")
+    _H0 = freq_response_1d(_h, np.array([_omega0]))[0]
+    _mag0 = np.abs(_H0)
+    _phase0 = np.angle(_H0)
+
+    _x_lo, _x_hi = 60, 140
+    _x_fine = np.linspace(_x_lo, _x_hi, 10 * (_x_hi - _x_lo))  # 10x the sampling density
+    _s_fine = np.sin(_omega0 * _x_fine)
+    _o_fine = _mag0 * np.sin(_omega0 * _x_fine + _phase0)  # exact, via Eq. 3.51
 
     _omegas = np.linspace(0, np.pi, 400)
     _mag = np.abs(freq_response_1d(_h, _omegas))
-    _mag0 = np.abs(freq_response_1d(_h, np.array([_omega0]))[0])
 
     _fig, _axes = plt.subplots(1, 2, figsize=(11, 4))
-    _window = slice(60, 140)
-    _axes[0].plot(_x[_window], _s[_window], label="input s(x)", lw=1.5)
-    _axes[0].plot(_x[_window], _o[_window], label="output o(x) = h*s", lw=1.5)
+    _axes[0].plot(_x_fine, _s_fine, label="input s(x)", lw=1.5)
+    _axes[0].plot(_x_fine, _o_fine, label="output o(x) = h*s", lw=1.5)
     _axes[0].set_title(f"time domain, f={freq_slider.value:.2f}")
     _axes[0].set_xlabel("x")
     _axes[0].legend(fontsize=8)
