@@ -7,8 +7,9 @@ image live here, with different provenance:
   `chelsea.png`, `raccoon.png`) — reusable across notebooks (color spaces, filtering,
   histogram equalization, ...).
 - The **textbook figure extracts** in `textbook_figures/` — used by
-  `07_sensors_and_color.py`, `11_multiresolution_representations.py`, and
-  `12_geometric_transformations.py`, cropped from the course PDF for citation purposes.
+  `07_sensors_and_color.py`, `11_multiresolution_representations.py`,
+  `12_geometric_transformations.py`, and `13_feature_detection.py`, cropped from the
+  course PDF for citation purposes.
 
 ## Standard test images
 
@@ -66,10 +67,10 @@ clean, unambiguous public-domain/CC0 licensing.
 
 Cropped directly from `Szeliski_CVAABook_2ndEd.pdf` (Richard Szeliski, *Computer Vision:
 Algorithms and Applications*, 2nd ed., final draft Sept. 2021, Springer) using PyMuPDF,
-for citation in `07_sensors_and_color.py`, `11_multiresolution_representations.py`, and
-`12_geometric_transformations.py`. Reproduced here for educational, non-commercial
-classroom use with full attribution, consistent with the book's own citation of its
-sources.
+for citation in `07_sensors_and_color.py`, `11_multiresolution_representations.py`,
+`12_geometric_transformations.py`, and `13_feature_detection.py`. Reproduced here for
+educational, non-commercial classroom use with full attribution, consistent with the
+book's own citation of its sources.
 
 ### `szeliski_fig2_23_sensing_pipeline.png`
 - **Book figure:** Figure 2.23, p. 80 (PDF page index 105).
@@ -164,3 +165,50 @@ sources.
 - **Original source, per the book's own citation:** Gomes, Darsa et al. (1999), ©
   1999 Morgan Kaufmann. Reproduced in the textbook and re-extracted here for the same
   educational purpose; the original copyright holder is Morgan Kaufmann.
+
+### `szeliski_fig7_4_aperture_problem.png`
+- **Book figure:** Figure 7.4, p. 422 (PDF page index 447).
+- **Caption:** "Aperture problems for different image patches: (a) stable
+  ("corner-like") flow; (b) classic aperture problem (barber-pole illusion); (c)
+  textureless region."
+- **Original source:** Szeliski's own diagram (not itself attributed to a third party
+  in the caption).
+
+### `szeliski_fig7_5_autocorrelation_surfaces.png`
+- **Book figure:** Figure 7.5, p. 423 (PDF page index 448).
+- **Caption:** "Three auto-correlation surfaces $E_{AC}(\Delta u)$ shown as both
+  grayscale images and surface plots: (a) the original image is marked with three
+  red crosses to denote where the auto-correlation surfaces were computed; (b) this
+  patch is from the flower bed (good unique minimum); (c) this patch is from the
+  roof edge (one-dimensional aperture problem); and (d) this patch is from the cloud
+  (no good peak)."
+- **Original source:** Szeliski's own figure (not itself attributed to a third party
+  in the caption).
+
+### `szeliski_fig7_6_uncertainty_ellipse.png`
+- **Book figure:** Figure 7.6, p. 425 (PDF page index 450).
+- **Caption:** "Uncertainty ellipse corresponding to an eigenvalue analysis of the
+  auto-correlation matrix A."
+- **Original source:** Szeliski's own diagram (not itself attributed to a third party
+  in the caption).
+
+### `szeliski_fig7_11_dog_scale_space.png`
+- **Book figure:** Figure 7.11, p. 430 (PDF page index 455).
+- **Caption:** "Scale-space feature detection using a sub-octave Difference of
+  Gaussian pyramid (Lowe 2004) © 2004 Springer: (a) Adjacent levels of a sub-octave
+  Gaussian pyramid are subtracted to produce Difference of Gaussian images; (b)
+  extrema (maxima and minima) in the resulting 3D volume are detected by comparing a
+  pixel to its 26 neighbors."
+- **Original source, per the book's own citation:** Lowe (2004), © 2004 Springer.
+  Reproduced in the textbook and re-extracted here for the same educational purpose;
+  the original copyright holder is Springer.
+
+### `szeliski_fig7_12_orientation_histogram.png`
+- **Book figure:** Figure 7.12, p. 431 (PDF page index 456).
+- **Caption:** "A dominant orientation estimate can be computed by creating a
+  histogram of all the gradient orientations (weighted by their magnitudes or after
+  thresholding out small gradients) and then finding the significant peaks in this
+  distribution (Lowe 2004) © 2004 Springer."
+- **Original source, per the book's own citation:** Lowe (2004), © 2004 Springer.
+  Reproduced in the textbook and re-extracted here for the same educational purpose;
+  the original copyright holder is Springer.
