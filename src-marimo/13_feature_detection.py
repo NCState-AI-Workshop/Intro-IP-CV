@@ -309,45 +309,53 @@ def _(mo):
 
 @app.cell
 def _(mo):
-    lambda0_slider = mo.ui.slider(start=0.2, stop=3.0, value=0.5, step=0.1, label="λ0 (smaller)", debounce=True)
-    lambda1_slider = mo.ui.slider(start=0.2, stop=3.0, value=2.0, step=0.1, label="λ1 (larger)", debounce=True)
-    theta_ellipse_slider = mo.ui.slider(start=0, stop=180, value=30, step=5, label="eigenvector angle θ (°)", debounce=True)
-    mo.vstack([mo.hstack([lambda0_slider, lambda1_slider, theta_ellipse_slider], justify="start", gap=2)])
-    return lambda0_slider, lambda1_slider, theta_ellipse_slider
+    randomize_ellipse_button = mo.ui.button(
+        label="Randomize matrix A",
+        value=0,
+        on_click=lambda count: count + 1,
+    )
+    randomize_ellipse_button
+    return (randomize_ellipse_button,)
 
 
 @app.cell
-def _(
-    draw_uncertainty_ellipse,
-    lambda0_slider,
-    lambda1_slider,
-    mo,
-    np,
-    plt,
-    theta_ellipse_slider,
-):
-    _lam0 = min(lambda0_slider.value, lambda1_slider.value)
-    _lam1 = max(lambda0_slider.value, lambda1_slider.value)
-    _theta = np.deg2rad(theta_ellipse_slider.value)
+def _(draw_uncertainty_ellipse, mo, np, plt, randomize_ellipse_button):
+    _rng = np.random.default_rng(seed=randomize_ellipse_button.value)
+    _lam0 = _rng.uniform(0.3, 1.2)
+    _ratio = _rng.uniform(4.0, 10.0)
+    _lam1 = _lam0 * _ratio
+    _theta = _rng.uniform(0, np.pi)
     _v0 = np.array([np.cos(_theta), np.sin(_theta)])
     _v1 = np.array([-np.sin(_theta), np.cos(_theta)])
     _V = np.stack([_v0, _v1], axis=1)
     _A = _V @ np.diag([_lam0, _lam1]) @ _V.T
 
-    _fig, _ax = plt.subplots(figsize=(5.5, 5.5))
-    _evals, _evecs = draw_uncertainty_ellipse(_ax, _A, target_radius=None, color="tab:blue", lw=2)
+    _lim = 2.5
+    _grid = np.linspace(-_lim, _lim, 200)
+    _V1, _V2 = np.meshgrid(_grid, _grid)
+    _Q = _A[0, 0] * _V1**2 + 2 * _A[0, 1] * _V1 * _V2 + _A[1, 1] * _V2**2
+
+    _fig, _ax = plt.subplots(figsize=(6, 5.5))
+    _im = _ax.imshow(_Q, extent=[-_lim, _lim, -_lim, _lim], origin="lower", cmap="viridis")
+    _evals, _evecs = draw_uncertainty_ellipse(_ax, _A, target_radius=None, color="white", lw=2)
     for _i, _lab in [(0, "λ0⁻¹ᐟ²"), (1, "λ1⁻¹ᐟ²")]:
         _len = 1.0 / np.sqrt(_evals[_i])
         _vec = _evecs[:, _i] * _len
         _ax.annotate("", xy=tuple(_vec), xytext=(0, 0), arrowprops=dict(arrowstyle="->", color="tab:red", lw=1.5))
-        _ax.text(*(_vec * 1.1), _lab, color="tab:red", fontsize=10)
-    _lim = 1.0 / np.sqrt(lambda0_slider.value) * 1.4
+        _ax.text(*(_vec * 1.1), _lab, color="white", fontsize=10)
     _ax.set_xlim(-_lim, _lim)
     _ax.set_ylim(-_lim, _lim)
     _ax.set_aspect("equal")
-    _ax.axhline(0, color="gray", lw=0.4)
-    _ax.axvline(0, color="gray", lw=0.4)
-    _ax.set_title(f"λ0={_lam0:.1f}, λ1={_lam1:.1f}: {'round (both large)' if _lam0 > 1.2 else ('elongated (one small)' if _lam1 / _lam0 > 2 else 'moderate')}")
+    _ax.set_xlabel("v₁")
+    _ax.set_ylabel("v₂")
+    _cbar = _fig.colorbar(_im, ax=_ax, fraction=0.046, pad=0.04)
+    _cbar.set_label("vᵀAv")
+
+    _matrix_str = (
+        f"A = ⎡{_A[0,0]:6.2f} {_A[0,1]:6.2f}⎤    λ0 = {_lam0:.2f}\n"
+        f"    ⎣{_A[1,0]:6.2f} {_A[1,1]:6.2f}⎦    λ1 = {_lam1:.2f}"
+    )
+    _ax.set_title(_matrix_str, fontfamily="monospace", fontsize=11, linespacing=1.6)
 
     mo.vstack([_fig])
     return
@@ -356,11 +364,13 @@ def _(
 @app.cell
 def _(mo):
     mo.md("""
-    Try making the two eigenvalues equal (a circle — equally uncertain in
-    every direction) versus very different (a long, thin ellipse — well
-    localized along one eigenvector, ambiguous along the other). §3 makes
-    the connection concrete: the ellipse above will reappear as a direct
-    overlay on a *real* auto-correlation surface.
+    Click the button a few times. When the two eigenvalues land close
+    together, the heatmap's bowl is round and the ellipse is close to a
+    circle — equally uncertain in every direction. When they're very
+    different, the bowl is a narrow valley and the ellipse stretches into
+    a long, thin shape — well localized along one eigenvector, ambiguous
+    along the other. §3 makes the connection concrete: this same overlay
+    reappears directly on a *real* auto-correlation surface.
     """)
     return
 
@@ -652,6 +662,51 @@ def _(TEXTBOOK_FIGURES_DIR, mo, plt):
     mo.vstack([
         _fig,
         mo.md("*Figure 7.11 from Szeliski, **Computer Vision: Algorithms and Applications**, 2nd ed. (final draft, Sept. 2021), p. 430, © 2004 Springer (Lowe 2004), reproduced for educational use.*"),
+    ])
+    return
+
+
+@app.cell
+def _(np):
+    def make_blob_image(size=220):
+        yy, xx = np.mgrid[0:size, 0:size]
+        img = np.full((size, size), 200.0)
+        blobs = [(55, 55, 8), (160, 55, 14), (55, 160, 22), (160, 160, 32)]
+        for cy, cx, r in blobs:
+            img[(yy - cy) ** 2 + (xx - cx) ** 2 <= r**2] = 50.0
+        return img, blobs
+
+    return (make_blob_image,)
+
+
+@app.cell
+def _(mo):
+    sigma_base_slider = mo.ui.slider(start=2, stop=28, value=4, step=2, label="base σ of the stack", debounce=True)
+    sigma_base_slider
+    return (sigma_base_slider,)
+
+
+@app.cell
+def _(gaussian_filter, make_blob_image, mo, np, plt, sigma_base_slider):
+    _img, _blobs = make_blob_image()
+    _sigmas = [sigma_base_slider.value * m for m in [1, 2, 3, 4]]
+
+    _fig, _axes = plt.subplots(1, len(_sigmas), figsize=(3.0 * len(_sigmas), 3.4))
+    for _ax, _s in zip(_axes, _sigmas):
+        _blur1 = gaussian_filter(_img, sigma=_s)
+        _blur2 = gaussian_filter(_img, sigma=_s * 1.6)
+        _dog = _blur1 - _blur2
+        _vmax = max(np.abs(_dog).max(), 1e-6)
+        _ax.imshow(_dog, cmap="RdBu_r", vmin=-_vmax, vmax=_vmax)
+        for _cy, _cx, _r in _blobs:
+            _ax.add_patch(plt.Circle((_cx, _cy), _r, edgecolor="lime", facecolor="none", lw=1, ls=":"))
+        _ax.set_title(f"σ={_s:.0f}", fontsize=10)
+        _ax.axis("off")
+    _fig.tight_layout()
+
+    mo.vstack([
+        mo.md("Four fixed blobs of increasing radius (dotted outlines), same image, four DoG bands at increasing σ. Watch which blob lights up strongest (darkest ring) at each σ — smaller blobs peak at small σ, larger blobs need a larger σ to \"fit.\""),
+        _fig,
     ])
     return
 

@@ -8,8 +8,9 @@ image live here, with different provenance:
   histogram equalization, ...).
 - The **textbook figure extracts** in `textbook_figures/` — used by
   `07_sensors_and_color.py`, `11_multiresolution_representations.py`,
-  `12_geometric_transformations.py`, and `13_feature_detection.py`, cropped from the
-  course PDF for citation purposes.
+  `12_geometric_transformations.py`, `13_feature_detection.py`,
+  `14_feature_matching_and_tracking.py`, and `15_edge_detection.py`, cropped from
+  the course PDF for citation purposes.
 
 ## Standard test images
 
@@ -68,9 +69,10 @@ clean, unambiguous public-domain/CC0 licensing.
 Cropped directly from `Szeliski_CVAABook_2ndEd.pdf` (Richard Szeliski, *Computer Vision:
 Algorithms and Applications*, 2nd ed., final draft Sept. 2021, Springer) using PyMuPDF,
 for citation in `07_sensors_and_color.py`, `11_multiresolution_representations.py`,
-`12_geometric_transformations.py`, and `13_feature_detection.py`. Reproduced here for
-educational, non-commercial classroom use with full attribution, consistent with the
-book's own citation of its sources.
+`12_geometric_transformations.py`, `13_feature_detection.py`,
+`14_feature_matching_and_tracking.py`, and `15_edge_detection.py`. Reproduced here
+for educational, non-commercial classroom use with full attribution, consistent
+with the book's own citation of its sources.
 
 ### `szeliski_fig2_23_sensing_pipeline.png`
 - **Book figure:** Figure 2.23, p. 80 (PDF page index 105).
@@ -212,3 +214,29 @@ book's own citation of its sources.
 - **Original source, per the book's own citation:** Lowe (2004), © 2004 Springer.
   Reproduced in the textbook and re-extracted here for the same educational purpose;
   the original copyright holder is Springer.
+
+### `szeliski_fig7_21_false_positives_negatives.png`
+- **Book figure/table:** Figure 7.21 and Table 7.1, p. 442 (PDF page index 467).
+- **Caption:** "False positives and negatives: The black digits 1 and 2 are features
+  being matched against a database of features in other images..." Table 7.1 (the
+  accompanying worked TP/FP/FN/TN/TPR/FPR/PPV/ACC example) is included in the same
+  crop.
+- **Original source:** Szeliski's own diagram/table (not itself attributed to a
+  third party in the caption).
+
+### `szeliski_fig7_23_nndr_matching.png`
+- **Book figure:** Figure 7.23, p. 445 (PDF page index 470).
+- **Caption:** "Fixed threshold, nearest neighbor, and nearest neighbor distance
+  ratio matching. At a fixed distance threshold (dashed circles), descriptor D_A
+  fails to match D_B and D_D incorrectly matches D_C and D_E..."
+- **Original source:** Szeliski's own diagram (not itself attributed to a third
+  party in the caption).
+
+### `szeliski_fig7_32_human_boundary_detection.png`
+- **Book figure:** Figure 7.32, p. 456 (PDF page index 481).
+- **Caption:** "Human boundary detection (Martin, Fowlkes, and Malik 2004) © 2004
+  IEEE. The darkness of the edges corresponds to how many human subjects marked an
+  object boundary at that location."
+- **Original source, per the book's own citation:** Martin, Fowlkes, and Malik
+  (2004), © 2004 IEEE. Reproduced in the textbook and re-extracted here for the same
+  educational purpose; the original copyright holder is IEEE.
