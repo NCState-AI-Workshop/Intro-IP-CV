@@ -3,14 +3,15 @@
 This folder holds shared raster assets for the `src-marimo` notebooks. Two kinds of
 image live here, with different provenance:
 
-- The four **standard test images** at the top level (`astronaut.png`, `coffee.png`,
-  `chelsea.png`, `raccoon.png`) — reusable across notebooks (color spaces, filtering,
-  histogram equalization, ...).
+- The five **standard test images** at the top level (`astronaut.png`, `coffee.png`,
+  `chelsea.png`, `raccoon.png`, `coins.png`) — reusable across notebooks (color spaces,
+  filtering, histogram equalization, ...).
 - The **textbook figure extracts** in `textbook_figures/` — used by
   `07_sensors_and_color.py`, `11_multiresolution_representations.py`,
   `12_geometric_transformations.py`, `13_feature_detection.py`,
-  `14_feature_matching_and_tracking.py`, and `15_edge_detection.py`, cropped from
-  the course PDF for citation purposes.
+  `14_feature_matching_and_tracking.py`, `15_edge_detection.py`,
+  `16_active_contours_and_segmentation.py`, and
+  `17_lines_hough_and_ransac.py`, cropped from the course PDF for citation purposes.
 
 ## Standard test images
 
@@ -58,6 +59,17 @@ documents the source and license of each image in its own docstrings, reproduced
 - This is also a long-standing "standard test image" in its own right — it's shipped
   with SciPy/NumPy for exactly this purpose and shows up throughout their
   documentation and tutorials.
+
+### `coins.png`
+- **Function:** `skimage.data.coins()`
+- **Subject:** Several coins of a few distinct sizes on a plain background — grayscale,
+  replicated across 3 channels for consistency with the RGB loader used elsewhere.
+  Chosen for its clean, well-separated circular boundaries (Hough circle detection,
+  active-contour/snake initialization, watershed-style segmentation).
+- **License:** Released under a free-of-restriction license by scikit-image; original
+  images are in the public domain (no known copyright restrictions), per
+  scikit-image's own data-source documentation.
+- **Dimensions:** 303 × 384, originally grayscale.
 
 Why these and not the classic "Lena" test image: Lena is a 1972 Playboy centerfold crop
 whose continued use in course materials and papers has drawn increasing (and
