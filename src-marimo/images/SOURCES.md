@@ -12,6 +12,10 @@ image live here, with different provenance:
   `14_feature_matching_and_tracking.py`, `15_edge_detection.py`,
   `16_active_contours_and_segmentation.py`, and
   `17_lines_hough_and_ransac.py`, cropped from the course PDF for citation purposes.
+- The **externally-sourced figures** in `external_figures/` — used by
+  `18_optical_flow.py` for material beyond the textbook (an application image, and
+  real video frame pairs from a standard research dataset), each cited below with
+  its original source and license.
 
 ## Standard test images
 
@@ -252,3 +256,56 @@ with the book's own citation of its sources.
 - **Original source, per the book's own citation:** Martin, Fowlkes, and Malik
   (2004), © 2004 IEEE. Reproduced in the textbook and re-extracted here for the same
   educational purpose; the original copyright holder is IEEE.
+
+## Externally-sourced figures (`external_figures/`)
+
+Images used in `18_optical_flow.py` that come from outside the course PDF, each
+with its own license and attribution.
+
+### `piv_vortex_pair.jpg`
+- **Subject:** Particle Image Velocimetry (PIV) analysis of a Hamel–Oseen vortex
+  pair — a textured field of tracer particles (seeded into a fluid) with the
+  computed velocity vector field overlaid, including an inset showing the
+  increase in spatial resolution from a multi-pass window-deformation technique.
+  Used in notebook 18's applications intro as an example of optical-flow-style
+  motion estimation in scientific/fluid imaging, beyond the book's own listed
+  applications.
+- **Source:** Wikimedia Commons, [`File:PIVlab_multipass.jpg`](https://commons.wikimedia.org/wiki/File:PIVlab_multipass.jpg).
+- **Author:** Willa.
+- **License:** CC BY-SA 3.0 (Creative Commons Attribution-ShareAlike 3.0
+  Unported). Reproduced unmodified (resized only).
+
+### `sintel_desert_frame1.png` / `sintel_desert_frame2.png`
+### `sintel_overlook_frame1.png` / `sintel_overlook_frame2.png`
+- **Subject:** Two consecutive-frame pairs (frames 8500–8501 and 7200–7201) from
+  the Blender Foundation's open movie *Sintel*, used in notebook 18 §5 as real
+  video frame pairs for dense optical flow estimation — the same movie the
+  course textbook cites as the source of the modern MPI-Sintel optical flow
+  benchmark (Butler, Wulff, Stanley, and Black, "A naturalistic open source
+  movie for optical flow evaluation," ECCV 2012), per Szeliski §9.3's own
+  recommendation that "more recent publications tend to focus... on the MPI
+  Sintel dataset." Both were chosen specifically for having a panning camera
+  over a richly-textured scene, which gives a clean, coherent (motion-parallax)
+  flow field for illustration purposes.
+- **Source:** Official Xiph.org Test Media collection,
+  <https://media.xiph.org/sintel/sintel-1080-png/> (frame-exact PNG export of
+  the finished film), frame numbers 8500/8501 and 7200/7201, resized down from
+  1920×818 to 320×136 for this notebook.
+- **Original creator:** Blender Foundation / Durian Film Project
+  (<https://durian.blender.org>), directed by Colin Levy.
+- **License:** CC BY 3.0 (Creative Commons Attribution 3.0 Unported), per the
+  project's own README (<https://media.xiph.org/sintel/README.txt>): "Some
+  Rights Reserved. Creative Commons Attribution 3.0 license," excepting logos
+  included in the film (not present in the cropped frames used here).
+
+### `sintel_desert_clip.mp4` / `sintel_overlook_clip.mp4`
+- **Subject:** Short (32-frame, ~1.3s at the film's native 24fps) motion clips
+  spanning the same two scenes as the still-frame pairs above, used in notebook
+  18 §5 so students can watch the real motion directly, as a side-by-side
+  comparison against the single-frame-pair optical flow estimate.
+- **Source:** Same Official Xiph.org Test Media collection as above
+  (<https://media.xiph.org/sintel/sintel-1080-png/>), frame ranges 8485–8516
+  and 7185–7216, each frame resized to 320×136 and re-encoded to H.264/MP4
+  with `ffmpeg` at the source framerate.
+- **Original creator / License:** Same as the still frames above — Blender
+  Foundation / Durian Film Project, CC BY 3.0.

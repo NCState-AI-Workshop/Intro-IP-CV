@@ -204,7 +204,9 @@ def _(map_coordinates, mo, np, plt):
     _fig, _axes = plt.subplots(1, 2, figsize=(10.5, 4.5))
 
     _axes[0].imshow(_mag, cmap="inferno")
-    _axes[0].quiver(_cx, _cy, _ux, _uy, color="cyan", scale=6, width=0.025, label="gradient direction")
+    _axes[0].quiver(
+        _cx, _cy, _ux, _uy, color="cyan", scale=6, width=0.025, angles="xy", label="gradient direction"
+    )
     _axes[0].plot(
         [_bwd_pt[1], _cx, _fwd_pt[1]], [_bwd_pt[0], _cy, _fwd_pt[0]], "o-", color="white", markersize=6
     )
