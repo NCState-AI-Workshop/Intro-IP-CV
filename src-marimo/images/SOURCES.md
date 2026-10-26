@@ -259,8 +259,10 @@ with the book's own citation of its sources.
 
 ## Externally-sourced figures (`external_figures/`)
 
-Images used in `18_optical_flow.py` that come from outside the course PDF, each
-with its own license and attribution.
+Images used in `18_optical_flow.py`, `22_stereo_vision_and_dense_depth.py`,
+and `24_nerf_and_gaussian_splatting.py` that come from outside the course
+PDF, each with its own license and
+attribution.
 
 ### `piv_vortex_pair.jpg`
 - **Subject:** Particle Image Velocimetry (PIV) analysis of a Hamel–Oseen vortex
@@ -309,3 +311,100 @@ with its own license and attribution.
   with `ffmpeg` at the source framerate.
 - **Original creator / License:** Same as the still frames above — Blender
   Foundation / Durian Film Project, CC BY 3.0.
+
+### `middlebury_tsukuba_left.png` / `middlebury_tsukuba_right.png` / `middlebury_tsukuba_gt.npy`
+### `middlebury_map_left.png` / `middlebury_map_right.png` / `middlebury_map_gt.npy`
+### `middlebury_venus_left.png` / `middlebury_venus_right.png` / `middlebury_venus_gt.npy`
+- **Subject:** Three classic rectified stereo pairs with pixel-accurate
+  ground-truth disparity maps, used in notebook 22 as real, standard-dataset
+  examples of block matching and dynamic-programming stereo correspondence,
+  alongside that notebook's synthetic demo. Tsukuba (384×288, desk scene with
+  camera/lamp/bust) uses the standard adjacent-column pair (`scene1.row3.col3`
+  as left, `scene1.row3.col4` as right) from the multi-baseline sequence, with
+  ground truth `truedisp.row3.col3.pgm` scaled by a factor of 16 (confirmed
+  empirically: raw values are exact multiples of 16, giving a true disparity
+  range of 0-14px). Map (284×216, tilted topographic relief map, `im0`/`im1`)
+  and Venus (434×383, slanted poster scene, `im2`/`im6` of a 9-view sequence)
+  both use ground truth scaled by a factor of 8, per the dataset's own
+  documentation -- also confirmed empirically here by warping the right image
+  by the recovered disparity and checking it reconstructs the left image
+  (median reconstruction error 1.7, 6.0, and 1.2 (of 255) for Tsukuba, Map,
+  and Venus respectively). The `_gt.npy` files store the already-descaled,
+  true pixel-disparity arrays (float32) directly, so the notebook never needs
+  to re-derive or guess the scale factor.
+- **Source:** Middlebury Stereo Datasets, 2001 scene set,
+  <https://vision.middlebury.edu/stereo/data/scenes2001/data/> (`tsukuba.zip`,
+  `map.zip`, `venus.zip`). Tsukuba courtesy of the University of Tsukuba; Map
+  courtesy of R. Szeliski and R. Zabih.
+- **Citation:** D. Scharstein and R. Szeliski, "A Taxonomy and Evaluation of
+  Dense Two-Frame Stereo Correspondence Algorithms," *International Journal
+  of Computer Vision* 47(1-3):7-42, April-June 2002 -- the same taxonomy
+  (matching cost, aggregation, optimization, refinement) notebook 22 itself
+  follows, per Szeliski §12's own framing.
+- **License:** The Middlebury Stereo Vision page states: "We grant permission
+  to use and publish all images and disparity maps on this website," subject
+  to citing the paper above -- the same kind of permission-plus-attribution
+  license already relied on for the PIV photo and Sintel frames above. The
+  Tsukuba pair is also reused directly (no new asset) in notebook 22 §2's
+  before/after epipolar-rectification demo: each image is re-warped there by
+  its own synthetic rotation-only homography to stand in for an unrectified
+  capture, with Tsukuba's own ground-truth disparity giving exact-match
+  points for the epipolar-line construction -- chosen over sourcing a second
+  real, genuinely-unrectified stereo rig (attempted once via OpenCV's
+  calibration sample photos and from-scratch pose recovery, which produced
+  an implausibly large inter-camera rotation on cross-checking and wasn't
+  reliable enough to present as ground truth).
+
+### `nerf_fig1_pipeline_teaser.png`, `nerf_fig2_pipeline_detail.png`, `nerf_fig4_ablation.png`
+- **Subject:** Three figures from the original NeRF paper, used in notebook
+  24's overview of neural radiance fields. `nerf_fig1_pipeline_teaser.png` is
+  Figure 1 (input images -> optimized NeRF -> rendered novel views, on the
+  synthetic Drums scene). `nerf_fig2_pipeline_detail.png` is Figure 2 (the
+  4-panel 5D-input / MLP-output / volume-rendering / rendering-loss
+  pipeline). `nerf_fig4_ablation.png` is Figure 4 (ground truth vs. the full
+  model vs. removing view-dependence vs. removing positional encoding, on
+  the synthetic Lego bulldozer scene) -- the ablation that directly motivates
+  §5's positional-encoding and view-dependence discussion. Each image is
+  cropped directly from the paper's own figure region (PyMuPDF), with the
+  original figure's own caption text excluded in favor of the notebook's own
+  citation, then downscaled 2x for file size.
+- **Source:** B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R.
+  Ramamoorthi, and R. Ng, "NeRF: Representing Scenes as Neural Radiance
+  Fields for View Synthesis," *ECCV 2020*. arXiv:2003.08934.
+  <https://arxiv.org/abs/2003.08934>.
+- **License:** Preprint freely available on arXiv; figures reproduced here
+  for non-commercial educational/classroom commentary with full attribution
+  to the original authors and venue, the same convention this course already
+  uses for the `textbook_figures/` extracts (several of which are themselves
+  third-party figures the Szeliski book reproduces under its own "© year
+  Publisher" notices, e.g. its own reproduction of this very paper's Fig.
+  14.24b).
+
+### `gsplat_fig1_teaser_comparison.png`, `gsplat_fig2_pipeline.png`, `gsplat_fig3_shrunken_gaussians.png`, `gsplat_fig4_densification.png`
+- **Subject:** Four figures from the original 3D Gaussian Splatting paper,
+  used in notebook 24's overview. `gsplat_fig1_teaser_comparison.png` is (a
+  crop of) Figure 1's quality/speed/training-time comparison against
+  InstantNGP, Plenoxels, and Mip-NeRF360 on the Bicycle scene.
+  `gsplat_fig2_pipeline.png` is Figure 2 (SfM points -> initialization -> 3D
+  Gaussians -> projection -> differentiable tile rasterizer -> image, with
+  the adaptive-density-control feedback loop) -- directly parallel to the
+  NeRF pipeline figure above, and the figure that makes this method's
+  SfM-point-cloud starting point explicit (the same bundle-adjustment output
+  notebook 23 produces). `gsplat_fig3_shrunken_gaussians.png` is Figure 3
+  (a rendered patch next to its own Gaussians, shrunk 60%, revealing their
+  anisotropic shapes). `gsplat_fig4_densification.png` is Figure 4 (the
+  clone/split adaptive densification scheme for under- vs.
+  over-reconstructed regions). Cropped and downscaled the same way as the
+  NeRF figures above.
+- **Source:** B. Kerbl, G. Kopanas, T. Leimkühler, and G. Drettakis, "3D
+  Gaussian Splatting for Real-Time Radiance Field Rendering," *ACM
+  Transactions on Graphics* 42(4), Article 1, August 2023. arXiv:2308.04079.
+  <https://arxiv.org/abs/2308.04079>.
+- **License:** "© 2023 Copyright held by the owner/author(s). Publication
+  rights licensed to ACM" (per the paper's own copyright line -- the authors
+  retain copyright). Figures reproduced here for non-commercial educational
+  classroom commentary with full attribution, the same convention as the
+  NeRF figures above. This paper postdates Szeliski's 2nd-edition draft
+  (Sept. 2021) by nearly two years, so it appears nowhere in the book
+  notebooks 1-23 have been citing all along -- the first notebook in this
+  course to source a paper the textbook itself has no knowledge of.
