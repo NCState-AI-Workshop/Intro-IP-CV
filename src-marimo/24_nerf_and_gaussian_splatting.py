@@ -181,10 +181,10 @@ def _(mo):
       *spectrally biased* toward low-frequency functions -- they simply
       can't represent fine detail from raw $(x,y,z,\theta,\phi)$ inputs. NeRF
       first maps each coordinate through a fixed, non-learned sinusoidal
-      encoding at increasing frequencies,
-      $$ \gamma(p)=\big(\sin(2^0\pi p),\cos(2^0\pi p),\ldots,\sin(2^{L-1}\pi p),\cos(2^{L-1}\pi p)\big), \qquad (\text{Eq. 4}) $$
-      *before* the MLP ever sees it ($L{=}10$ for position, $L{=}4$ for
-      viewing direction) -- the same frequency-boosting trick behind
+      encoding at increasing frequencies, $\gamma(p)=\big(\sin(2^0\pi
+      p),\cos(2^0\pi p),\ldots,\sin(2^{L-1}\pi p),\cos(2^{L-1}\pi p)\big)$
+      (Eq. 4), *before* the MLP ever sees it ($L{=}10$ for position, $L{=}4$
+      for viewing direction) -- the same frequency-boosting trick behind
       Transformer positional encodings, repurposed here for continuous
       coordinates instead of discrete token positions.
     - **Hierarchical sampling**: densely sampling every ray wastes most of
