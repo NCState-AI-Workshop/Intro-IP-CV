@@ -17,3 +17,4 @@ This repository contains the materials used for this course.
 - Lecture 22: [ [ConvNets, Transformers and Transfer Learning](https://molab.marimo.io/github/NCState-AI-Workshop/Intro-IP-CV/blob/main/src-marimo/26_convnets_transformers_transfer_learning.py) | [Slides](slides/L22_convnets_transformers_transfer_learning.pdf) ]
 - Lecture 23: [ [Object Classification](https://molab.marimo.io/github/NCState-AI-Workshop/Intro-IP-CV/blob/main/src-marimo/27_object_classification.py) | [Slides](slides/L23_object_classification.pdf) ]
 - Lecture 24: [ [Object Detection](https://molab.marimo.io/github/NCState-AI-Workshop/Intro-IP-CV/blob/main/src-marimo/28_object_detection.py) | [Slides](slides/L24_object_detection.pdf) ]
+- Lecture 25: [ [Segmentation (1 of 3)](https://molab.marimo.io/github/NCState-AI-Workshop/Intro-IP-CV/blob/main/src-marimo/29_segmentation_lec1_dense_prediction.py) | [Supplemental Slides](slides/L25_segmentation_supplemental.pdf) ]
