@@ -852,13 +852,13 @@ def _():
     a soft mask over the whole image. This is DETR with masks in place of boxes.
 
     **Architecture in three parts.** A backbone extracts features. A **pixel decoder** upsamples them so
-    that every pixel gets an embedding vector. A **transformer decoder** refines $N$ learned query vectors
-    by cross-attending to the image features, exactly as in DETR. Each refined query then produces
+    that every pixel gets an embedding vector. A **transformer decoder** refines $N$ learned/template query vectors $p_i$ into $q_i$
+    by cross-attending to the image features, exactly as in DETR. Each refined query $q_i$ then produces
     (a) a class prediction through a linear layer and (b) a mask, by comparing the query with every
     pixel's embedding:
 
     $$
-    m_i(p) = \sigma\!\left(q_i^\top F(p)\right)
+    m_i(p) = \sigma\!\left(q_i^\top F(p)\right),\quad i \in \{1, \dots, N\}
     $$
 
     where
@@ -870,10 +870,32 @@ def _():
     - $\sigma$ is the sigmoid function, which squashes the dot product into $(0, 1)$;
     - $m_i(p)$ is the probability that pixel $p$ belongs to query $i$'s mask.
 
-    In words: each query is a template, and its mask lights up wherever the pixel embeddings look like
-    the template. Mask2Former's main addition over MaskFormer is **masked attention**: each query attends
+    In words: each refined query is a customized template, and its mask lights up wherever the pixels look like what the template "describes".
+
+    (Mask2Former's main addition over MaskFormer is *masked attention*: each query attends
     only to the pixels inside its own mask from the previous decoder layer, which keeps each query
-    focused on one object.
+    focused on one object.)
+
+    ---
+
+    **Two query examples** (out of $N$)**.** One query is just 256 numbers, so we can only describe how it
+        *behaves*. When DETR's authors plotted where each query's predictions landed across many images,
+        each query had specialized in certain regions and object sizes. Two queries might look like this
+        (indices chosen for illustration):
+
+    | | Query 3 | Query 42 |
+    |---|---|---|
+    | What it is | 256 learned numbers, e.g. $(0.12, -0.83, \dots, 0.05)$ | 256 different learned numbers |
+    | What it learned to look for | Small objects in the lower-left of the image, $p_3$ | Large objects covering most of the image, $p_{42}$ |
+    | On a photo with a cup in the lower-left | Becomes "cup" with a cup-shaped mask, $q_3$ | Becomes "no object", $q_{42}$ |
+    | On a close-up of a dog | Becomes "no object", $q_3$ | Becomes "dog" with a dog-shaped mask, $q_{42}$ |
+
+    A query is **not** tied to a class: query 3 has no notion of "cup." It is a learned slot that tends
+    to claim small things in one area, and what it finally predicts depends on what the image contains
+    there. Hungarian matching during training keeps the queries from all learning the same thing,
+    because each ground-truth object is assigned to exactly one query.
+
+    ---
     """)
     return
 
@@ -883,14 +905,14 @@ def _():
     mo.mermaid(
         """
     flowchart LR
-        I["Image"] --> BB["Backbone"] --> PD["Pixel decoder"]
+        I["Image"] --> BB["Backbone"] --> PD["Pixel decoder<br>(upsamples)"]
         PD --> F["Per-pixel embeddings F(p)"]
         PD --> MS["Multi-scale features"]
-        Q["N learned queries"] --> TD["Transformer decoder<br/>(masked cross-attention)"]
+        Q["N learned queries, p_i<br>(same for every image)"] --> TD["Transformer decoder<br/>(masked cross-attention)"]
         MS --> TD
         TD --> QE["Refined queries q_i"]
         QE --> CL["Linear layer → class"]
-        QE --> DOT(("dot product"))
+        QE --> DOT(("dot product<br>(similarity measure)"))
         F --> DOT --> M["Mask m_i"]
     """
     )
