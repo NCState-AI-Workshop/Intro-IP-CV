@@ -19,3 +19,4 @@ This repository contains the materials used for this course.
 - Lecture 24: [ [Object Detection](https://molab.marimo.io/github/NCState-AI-Workshop/Intro-IP-CV/blob/main/src-marimo/28_object_detection.py) | [Slides](slides/L24_object_detection.pdf) ]
 - Review of Lectures 21 - 24: [ [Review Sheet](slides/L21-L24_review.pdf) ]
 - Lecture 25: [ [Segmentation (1 of 3)](https://molab.marimo.io/github/NCState-AI-Workshop/Intro-IP-CV/blob/main/src-marimo/29_segmentation_lec1_dense_prediction.py) | [Supplemental Slides](slides/L25_segmentation_supplemental.pdf) ]
+- Lecture 26: [ [Segmentation (2 of 3)](https://molab.marimo.io/github/NCState-AI-Workshop/Intro-IP-CV/blob/main/src-marimo/30_segmentation_lec2_foundation_models.py) | [Supplemental Slides](slides/L26_segmentation_supplemental.pdf) ]

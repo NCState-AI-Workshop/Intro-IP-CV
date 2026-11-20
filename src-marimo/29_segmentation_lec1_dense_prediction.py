@@ -184,10 +184,19 @@ def _():
     mo.md(r"""
     ## 1.3 Fully convolutional network (FCN) and transposed convolution
 
-    **From classifier to dense predictor.** Long, Shelhamer, and Darrell (2015) observed that the fully connected layers at the end of a classification CNN can be replaced by convolutional layers—most notably 1-by-1 convolutions, which linearly combine features across channels at each spatial location. Instead of flattening features into a single score vector for the whole image, the network outputs a coarse 2D grid of class score vectors, which is then upsampled back to the original input image's dimensions. Because all layers perform convolutions and there are no fully connected layers, this architecture is called a **fully convolutional network (FCN)**.
+    **From classifier to dense predictor.** A classification CNN ends by collapsing its final feature
+    map into one vector (by flattening or spatial averaging), with a fully connected
+    layer turning that vector into one score per class. The collapse is exactly where the network forgets
+    *where* things are. The fix is simple: **skip the collapse.** Keep the final feature map, and apply
+    the class weights at *every* location separately. Applying the same weight vector at every
+    location is a $1\times1$ convolution: it linearly combines the channels at each position. The output
+    is a coarse 2D grid/matrix of class-score vectors instead of a single score vector.
 
     ---
-    **A tiny example (updated).** Suppose the final feature map has spatial size 2×2 with **2 channels** (say, Channel 1 detects *whiskers* and Channel 2 detects *floppy ears*), and we want class scores for **"cat"** and **"dog."**
+
+    **A tiny example.** Suppose the final feature map is 2×2 with **2 channels** (say, Channel 1
+    was trained to mainly capture the *whiskers* feature and Channel 2 mainly captures *floppy ears*), and we want scores for **"cat"** and
+    **"dog."** The class weights are `[2, -1]` for cat and `[-1, 2]` for dog (one weight per channel).
 
     ```text
     Channel 1 (whiskers)      Channel 2 (floppy ears)
@@ -197,21 +206,25 @@ def _():
         │ 0 │ 0 │                 │ 1 │ 4 │
         └───┴───┘                 └───┴───┘
     ```
-    *(Note: In the original image, top left has a cat and bottom right has a dog.)*
+    *(In the original image, a cat is in the top left and a dog in the bottom right.)*
 
-    **1. Standard CNN (Flattening destroys spatial layout):**
-    Flattening stacks all 2 × 2 × 2 = 8 numbers into a single vector. A fully connected layer combines everything at once into **one global score per class**, losing *where* the cat and dog features were located:
+    **1. Classifier: collapse first, then score.** Average each channel over the four locations, then
+    apply the class weights:
 
     ```text
-    flatten (8 values)           global scores
-     ──►  cat = 5.2,  dog = 8.1   ("Overall: dog")
+    whiskers average = (3 + 1 + 0 + 0) / 4 = 1.00
+    ears average     = (0 + 2 + 1 + 4) / 4 = 1.75
+
+    cat = 2(1.00) − 1(1.75) = 0.25
+    dog = −1(1.00) + 2(1.75) = 2.50        → "Overall: dog"
     ```
+    One answer for the whole image; the cat in the top left is lost.
 
-    **2. FCN (1×1 convolution preserves spatial layout):**
-    Instead of flattening, we apply two 1×1×2 filters—one for **cat** (weights `[2, -1]` across channels) and one for **dog** (weights `[-1, 2]` across channels)—at every (x, y) position independently:
+    **2. Dense predictor: score at every location, no collapse.** Apply the same weights at each
+    position (a $1\times1$ convolution):
 
-    * At **top-left** `(3, 0)`: cat = 3(2) + 0(-1) = 6, dog = 3(-1) + 0(2) = -3
-    * At **bottom-right** `(0, 4)`: cat = 0(2) + 4(-1) = -4, dog = 0(-1) + 4(2) = 8
+    * At **top-left** `(3, 0)`: cat = 3(2) + 0(−1) = 6, dog = 3(−1) + 0(2) = −3
+    * At **bottom-right** `(0, 4)`: cat = 0(2) + 4(−1) = −4, dog = 0(−1) + 4(2) = 8
 
     ```text
     Cat score map             Dog score map
@@ -221,12 +234,21 @@ def _():
       │ -1 │ -4 │               │  2 │  8 │
       └────┴────┘               └────┴────┘
     ```
-    The output is now a **$2\times2$ grid of class scores** instead of a single pair of numbers: the network sees a **cat in the top-left** and a **dog in the bottom-right**.
+    Now the network says **cat in the top left, dog in the bottom right.** Notice that averaging each map
+    gives back the classifier's answer — cat (6 + 0 − 1 − 4)/4 = 0.25, dog (−3 + 3 + 2 + 8)/4 = 2.5 —
+    because averaging and weighting can be done in either order. The score maps are what the
+    classifier computed *before* it averaged away the "where."
+
+    Because every layer is now a convolution, with no fully connected layer at the end, this design is
+    called a **fully convolutional network (FCN)** (Long et al., 2015). A practical
+    bonus: the class weights of an ImageNet-trained classifier can be reused as they are, so the dense
+    predictor starts from a pretrained network rather than from scratch.
 
     ---
 
-    The catch is **retained** resolution/spatial info. After five stride-2 stages, the score map is $32\times$ smaller than the image
-    in each direction; we say the **output stride** is 32. We need a way to go back up.
+    **The catch is resolution.** The score map keeps the spatial layout, but coarsely: after five stride-2
+    stages, it is $32\times$ smaller than the image in each direction.
+    We say the **output stride** is 32. We need a way to go back up.
 
     **Upsampling options.** Fixed bilinear interpolation (as in image resizing) is one option. A
     *learnable* alternative is the **transposed convolution**. (It is sometimes called "deconvolution,"
